@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using TheGame.Sprites;
 
 namespace TheGame
 {
@@ -8,10 +11,23 @@ namespace TheGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private List<Sprite> _sprites;
+        public static float Gravity = 10;
+        public static int _width;
+        public static int _height;
+
+        public static bool HitLeft(float x) { return x<=0; }
+        public static bool HitRight(float x) { return x >= _width; }
+        public static bool HitTop(float y) { return y <= 0; }
+        public static bool HitBottom(float y) { return y >= _height; }
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _width = 1280;
+            _height = 720;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -26,8 +42,15 @@ namespace TheGame
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            var playerTexture = Content.Load<Texture2D>("Player");
+            _sprites = new List<Sprite>()
+            {
+                new Player(playerTexture)
+                {
+                    Position = new Vector2(0,_graphics.PreferredBackBufferHeight - playerTexture.Height),
+                    Origin = new Vector2(0,0)
+                }
+            };
         }
 
         protected override void Update(GameTime gameTime)
@@ -35,7 +58,7 @@ namespace TheGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            foreach (var sprite in _sprites.ToArray()) sprite.Update(gameTime, _sprites);
 
             base.Update(gameTime);
         }
@@ -43,9 +66,9 @@ namespace TheGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            _spriteBatch.Begin();
+            foreach (var sprite in _sprites) sprite.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
