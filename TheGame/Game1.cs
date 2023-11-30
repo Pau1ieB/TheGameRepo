@@ -43,11 +43,24 @@ namespace TheGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             var playerTexture = Content.Load<Texture2D>("Player");
+            var platformTexture = Content.Load<Texture2D>("Platform");
+            var crateTexture = Content.Load<Texture2D>("Crate");
+            var poisonTexture = Content.Load<Texture2D>("Poison");
             _sprites = new List<Sprite>()
             {
                 new Player(playerTexture)
                 {
                     Position = new Vector2(0,_graphics.PreferredBackBufferHeight - playerTexture.Height),
+                    Origin = new Vector2(0,0)
+                },
+                new Platform(platformTexture)
+                {
+                    Position = new Vector2(300,400),
+                    Origin = new Vector2(0,0)
+                },
+                new Item(crateTexture) 
+                {
+                    Position = new Vector2(400,_graphics.PreferredBackBufferHeight - playerTexture.Height),
                     Origin = new Vector2(0,0)
                 }
             };
