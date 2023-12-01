@@ -5,6 +5,6 @@ namespace TheGame.Sprites
 {
     public class Item:Sprite
     {
-        public Item(Texture2D texture):base(texture) { }
+        public Item(Texture2D texture,float top, float left, int id):base(texture,top,left,id) { }
     }
 }

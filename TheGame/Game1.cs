@@ -12,30 +12,24 @@ namespace TheGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private List<Sprite> _sprites;
-        public static float Gravity = 10;
-        public static int _width;
-        public static int _height;
+        public static float Gravity = 5;
+        public int objectCount;
 
-        public static bool HitLeft(float x) { return x<=0; }
-        public static bool HitRight(float x) { return x >= _width; }
-        public static bool HitTop(float y) { return y <= 0; }
-        public static bool HitBottom(float y) { return y >= _height; }
+        public static bool HitGreaterThan(float x1, float x2) { return x1 >= x2; }
+        public static bool HitLessThan(float x1, float x2) { return x1 <= x2; }
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
-            _width = 1280;
-            _height = 720;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            objectCount = 0;
             base.Initialize();
         }
 
@@ -46,23 +40,13 @@ namespace TheGame
             var platformTexture = Content.Load<Texture2D>("Platform");
             var crateTexture = Content.Load<Texture2D>("Crate");
             var poisonTexture = Content.Load<Texture2D>("Poison");
+
             _sprites = new List<Sprite>()
             {
-                new Player(playerTexture)
-                {
-                    Position = new Vector2(0,_graphics.PreferredBackBufferHeight - playerTexture.Height),
-                    Origin = new Vector2(0,0)
-                },
-                new Platform(platformTexture)
-                {
-                    Position = new Vector2(300,400),
-                    Origin = new Vector2(0,0)
-                },
-                new Item(crateTexture) 
-                {
-                    Position = new Vector2(400,_graphics.PreferredBackBufferHeight - playerTexture.Height),
-                    Origin = new Vector2(0,0)
-                }
+                new World(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
+                new Player(playerTexture,0,_graphics.PreferredBackBufferHeight - playerTexture.Height,objectCount++),
+                new Platform(platformTexture,300,400,objectCount++),
+                new Item(crateTexture,400,_graphics.PreferredBackBufferHeight - playerTexture.Height,objectCount++) 
             };
         }
 

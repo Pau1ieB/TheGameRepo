@@ -7,48 +7,35 @@ using tutorial2.Models;
 
 namespace TheGame.Sprites
 {
-    public class Sprite : ICloneable
+    public class Sprite : GameObject
     {
         protected Texture2D _texture;
-        protected int _width;
-        protected int _height;
         protected float _rotation;
         protected KeyboardState _currentKey;
         protected KeyboardState _previousKey;
         protected SpriteEffects _spriteEffects = SpriteEffects.None;
-        public Vector2 Position;
         public Vector2 Origin;
 
-
-        public Vector2 Direction;
-        public float RotationVelocity = 3f;
-
         public float LinearVelocity = 4f;
+        public float CurrentLinearVelocity = 0;
+        public bool _isLinearMoving = false;
         public int _facing = 1;
 
         public float VerticalVelocity = 0;
-        protected bool _isJumping = false;
+        protected bool _isVerticalMoving = false;
 
+        public Vector2 Direction;
+        public float RotationVelocity = 3f;
         public Sprite Parent;
 
-        public Input Input;
-
-        public float LifeSpan = 0f;
-        public bool IsRemoved = false;
-
-        public Sprite(Texture2D texture)
+        public Sprite(Texture2D texture, float top, float left, int id):base( new Vector2(top, left), new Vector2(texture.Width, texture.Height),1,id)
         {
             _texture = texture;
-            _width= texture.Width;
-            _height= texture.Height;
         }
 
-        public Rectangle Rectangle
+        public Sprite(float top, float left, float width, float height) : base(new Vector2(top, left), new Vector2(width, height), 50, -1)
         {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
-            }
+
         }
 
         public virtual void Update(GameTime gameTime, List<Sprite> sprites) { }

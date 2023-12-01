@@ -8,42 +8,66 @@ namespace TheGame.Sprites
 {
     public class Player:Sprite
     {
-        public Player(Texture2D texture) : base(texture)
-        {
+        public Player(Texture2D texture,float top,float left, int id) : base(texture,top,left, id){}
 
-        }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             _previousKey = _currentKey;
             _currentKey = Keyboard.GetState();
-            float _move = 0;
-            if (!_isJumping && _currentKey.IsKeyDown(Keys.P))
+            if (!_isVerticalMoving && _currentKey.IsKeyDown(Keys.P))
             {
-                VerticalVelocity = 60;
-                _isJumping = true;
+                VerticalVelocity = 40;
+                _isVerticalMoving = true;
             }
-
-            if (_currentKey.IsKeyDown(Keys.Q))
+            if (!_isVerticalMoving)
             {
-                _facing = -1;
-                _spriteEffects = SpriteEffects.FlipHorizontally;
-                 _move = _facing;
-           }
-            else if (_currentKey.IsKeyDown(Keys.W))
-            {
-                _facing = 1;
-                _spriteEffects = SpriteEffects.None;
-                _move = _facing;
+                if (_currentKey.IsKeyDown(Keys.Q))
+                {
+                    if (!_isLinearMoving)
+                    {
+                        _isLinearMoving = true;
+                        _facing = -1;
+                        _spriteEffects = SpriteEffects.FlipHorizontally;
+                    }
+                    if (_facing == 1) CurrentLinearVelocity -= 0.1f;
+                    else CurrentLinearVelocity = LinearVelocity;
+                }
+                else if (_currentKey.IsKeyDown(Keys.W))
+                {
+                    if (!_isLinearMoving)
+                    {
+                        _isLinearMoving = true;
+                        _facing = 1;
+                        _spriteEffects = SpriteEffects.None;
+                    }
+                    if (_facing == -1) CurrentLinearVelocity -= 0.1f;
+                    else CurrentLinearVelocity = LinearVelocity;
+                }
             }
-            Position.X += _move * LinearVelocity;
+            Position.X += _facing * CurrentLinearVelocity;
+            if (!_isVerticalMoving && _isLinearMoving)
+            {
+                CurrentLinearVelocity -= 0.03f;
+                if(CurrentLinearVelocity <= 0.0f)_isLinearMoving = false;
+            }
             Position.Y -= VerticalVelocity - Game1.Gravity;
-            if(VerticalVelocity > 0)VerticalVelocity-=5;
-            if(Game1.HitLeft(Position.X))Position.X = 0;
-            else if(Game1.HitRight(Position.X+_width)) Position.X = Game1._width-_width;
-
-            if (Game1.HitBottom(Position.Y + _height)) { 
-                Position.Y = Game1._height - _height; 
-                _isJumping=false;
+            if(VerticalVelocity > 0)VerticalVelocity-=2;
+            if (GameObject.Collision(Position.X, sprites[0].Position.X))
+            {
+                Position.X = 0;
+                _isLinearMoving = false;
+                CurrentLinearVelocity = 0;
+            }
+            else if (GameObject.Collision(sprites[0].Dimension.X - Dimension.X, Position.X)) 
+            { 
+                Position.X = sprites[0].Dimension.X - Dimension.X;
+                _isLinearMoving = false;
+                CurrentLinearVelocity = 0;
+            }
+            if(GameObject.Collision(sprites[0].Dimension.Y - Dimension.Y, Position.Y))
+            { 
+                Position.Y = sprites[0].Dimension.Y - Dimension.Y;
+                _isVerticalMoving = false;
             }
         }
     }
