@@ -11,8 +11,6 @@ namespace TheGame.Sprites
         public int _weight;
         public int _id;
 
-        public static bool Collision(float x1, float x2) { return x1 <= x2; }
-
         public GameObject(Vector2 pos, Vector2 dim, int weight, int id)
         {
             Position = pos;
@@ -20,6 +18,22 @@ namespace TheGame.Sprites
             _weight = weight;
             _id = id;
         }
+
+        public virtual bool isLevel(float y1, float y2) 
+        {
+            return !(y2 < Position.Y || y1 > Position.Y + Dimension.Y);
+        }
+
+        public virtual bool HitLeft(float x1, float x2){ return (x2 >= Position.X && x1<Position.X);}
+
+        public virtual bool HitRight(float x1, float x2) {
+            float right = RightSide();
+            return (x1<= right && x2> right);
+        }
+
+        public virtual float LeftSide() { return Position.X;}
+        public virtual float RightSide() { return Position.X + Dimension.Y;}
+
 
         public Rectangle Rectangle
         {

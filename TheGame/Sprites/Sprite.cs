@@ -38,7 +38,7 @@ namespace TheGame.Sprites
 
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite> sprites) { }
+        public virtual void Update(GameTime gameTime, List<Sprite> sprites,int start) { }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {

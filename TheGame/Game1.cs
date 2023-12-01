@@ -15,9 +15,6 @@ namespace TheGame
         public static float Gravity = 5;
         public int objectCount;
 
-        public static bool HitGreaterThan(float x1, float x2) { return x1 >= x2; }
-        public static bool HitLessThan(float x1, float x2) { return x1 <= x2; }
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -43,10 +40,10 @@ namespace TheGame
 
             _sprites = new List<Sprite>()
             {
-                new World(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
                 new Player(playerTexture,0,_graphics.PreferredBackBufferHeight - playerTexture.Height,objectCount++),
                 new Platform(platformTexture,300,400,objectCount++),
-                new Item(crateTexture,400,_graphics.PreferredBackBufferHeight - playerTexture.Height,objectCount++) 
+                new Item(crateTexture,400,_graphics.PreferredBackBufferHeight - playerTexture.Height,objectCount++), 
+                new World(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight)
             };
         }
 
@@ -54,8 +51,8 @@ namespace TheGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            foreach (var sprite in _sprites.ToArray()) sprite.Update(gameTime, _sprites);
+            int count = 1;
+            foreach (var sprite in _sprites.ToArray()) sprite.Update(gameTime, _sprites,count++);
 
             base.Update(gameTime);
         }
